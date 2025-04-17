@@ -44,6 +44,7 @@ Before you begin, ensure you have the following installed:
    ```
 2. Install dependencies:
    ```bash
+   cd backend
    pip install -r requirements.txt
    ```
 3. Start DynamoDB Local (Local testing)
@@ -65,7 +66,16 @@ Before you begin, ensure you have the following installed:
 
 **Note**: If you're only testing locally, you can skip the Terraform setup and use DynamoDB Local.
 
-1. Initialize and apply infrastructure:
+1. Create an IAM Role.
+2. Attach the managed policy AmazonDynamoDBFullAccess for full access or use a custom policy with the following permissions:
+
+- dynamodb:GetItem
+- dynamodb:PutItem
+- dynamodb:UpdateItem
+- dynamodb:Query
+- dynamodb:Scan
+
+3. Initialize and apply infrastructure:
    ```bash
    cd backend/terraform
    terraform init
