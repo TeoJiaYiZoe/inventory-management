@@ -79,7 +79,7 @@ Before you begin, ensure you have the following installed:
 
 ```bash
    cd backend
-   uvicorn main:app --reload
+   uvicorn main:app --reload --host localhost --port 8001
 ```
 
 ### Start frontend development server
