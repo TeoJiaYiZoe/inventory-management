@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Space, message } from "antd";
+import { Button, Form, Modal, Space, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useInventory } from "./hooks/useInventory";
 import { InventoryStats } from "./components/Inventory/InventoryStats";
@@ -27,6 +27,7 @@ const App = () => {
   } = useInventory();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [searchForm] = Form.useForm();
 
   useEffect(() => {
     fetchItems();
@@ -48,7 +49,7 @@ const App = () => {
       await createItem(values);
       message.success("Item created successfully");
       setIsModalOpen(false);
-
+      searchForm.resetFields();
       fetchItems();
     } catch (error) {
       message.error("Failed to create item");
@@ -65,6 +66,7 @@ const App = () => {
       if (success) {
         message.success("Price updated successfully");
         setIsModalOpen(false);
+        searchForm.resetFields();
         await fetchItems();
       } else {
         message.error("Price update failed");
@@ -96,6 +98,7 @@ const App = () => {
       </Button>
 
       <InventorySearch
+        form={searchForm}
         onSearch={handleSearch}
         categories={categories}
         loading={loading}

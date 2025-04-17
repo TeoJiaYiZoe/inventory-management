@@ -1,48 +1,37 @@
 import React from "react";
-import { Form, Button, Select, DatePicker } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Form, DatePicker, Select, Button, Space } from "antd";
 import { SearchFormValues } from "../../types";
 
-const { RangePicker } = DatePicker;
-
 interface Props {
+  form: any;
   onSearch: (values: SearchFormValues) => void;
   categories: string[];
   loading: boolean;
 }
 
 export const InventorySearch: React.FC<Props> = ({
+  form,
   onSearch,
   categories,
   loading,
 }) => {
-  const [form] = Form.useForm<SearchFormValues>();
-
   return (
-    <Form form={form} onFinish={onSearch} layout="inline">
+    <Form<SearchFormValues> form={form} onFinish={onSearch} layout="inline">
       <Form.Item name="dateRange" label="Date Range">
-        <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+        <DatePicker.RangePicker showTime />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Search
+        </Button>
       </Form.Item>
       <Form.Item name="category" label="Category">
         <Select
-          placeholder="Filter by category"
+          placeholder="Select category"
           style={{ width: 200 }}
           allowClear
-          options={categories.map((category) => ({
-            label: category,
-            value: category,
-          }))}
+          options={categories.map((cat) => ({ value: cat, label: cat }))}
         />
-      </Form.Item>
-      <Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          icon={<SearchOutlined />}
-          loading={loading}
-        >
-          Search
-        </Button>
       </Form.Item>
     </Form>
   );
