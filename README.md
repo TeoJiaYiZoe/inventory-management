@@ -28,7 +28,7 @@ An inventory management system that perform CRU operations (create, read, update
 Before you begin, ensure you have the following installed:
 
 - Docker (running)
-- Python 3.7+
+- Python 3.9+
 - Node.js and npm
 - AWS CLI with configured credentials
 - Terraform
