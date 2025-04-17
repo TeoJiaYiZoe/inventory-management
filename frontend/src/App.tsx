@@ -43,23 +43,37 @@ const App = () => {
   };
 
   const handleCreateItem = async (values: CreateFormValues) => {
-    const success = await createItem(values);
-    if (success) {
+    try {
+      console.log("Form submitted with values:", values);
+      await createItem(values);
       message.success("Item created successfully");
       setIsModalOpen(false);
+
+      fetchItems();
+    } catch (error) {
+      message.error("Failed to create item");
+      console.error("Creation error:", error);
     }
   };
 
   const handleEditSubmit = async (values: EditFormValues) => {
     if (!editingItem) return;
+    try {
+      console.log("Updating price with:", values);
+      const success = await updateItemPrice(editingItem.id, values.price);
 
-    const success = await updateItemPrice(editingItem.id, values.price);
-    if (success) {
-      message.success("Price updated successfully");
-      setIsModalOpen(false);
+      if (success) {
+        message.success("Price updated successfully");
+        setIsModalOpen(false);
+        await fetchItems();
+      } else {
+        message.error("Price update failed");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      message.error("Failed to update price. Please try again.");
     }
   };
-
   const handleEdit = (item: Item) => {
     setEditingItem(item);
     setIsModalOpen(true);

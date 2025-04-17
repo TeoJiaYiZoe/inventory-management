@@ -8,6 +8,7 @@ interface Props {
 
 export const CreateForm: React.FC<Props> = ({ onSubmit }) => (
   <Form<CreateFormValues>
+    id="create-form"
     onFinish={onSubmit}
     layout="vertical"
     initialValues={{ price: 0.01 }}

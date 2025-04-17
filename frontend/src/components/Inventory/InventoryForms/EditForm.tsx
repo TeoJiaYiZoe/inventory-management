@@ -9,6 +9,7 @@ interface Props {
 
 export const EditForm: React.FC<Props> = ({ item, onSubmit }) => (
   <Form<EditFormValues>
+    id="edit-form"
     onFinish={onSubmit}
     layout="vertical"
     initialValues={{ price: item.price }}

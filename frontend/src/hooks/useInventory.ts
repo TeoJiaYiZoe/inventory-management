@@ -36,30 +36,38 @@ export const useInventory = () => {
     }
   };
 
-  const createItem = async (values: CreateFormValues) => {
-    try {
-      const newItem = await inventoryServiceAxios.createItem(values);
-      setItems(prev => [...prev, newItem]);
-      await fetchAllCategories();
-      return true;
-    } catch (error) {
-      message.error('Failed to create item.');
-      return false;
-    }
-  };
+const createItem = async (values: CreateFormValues) => {
+  try {
+    setLoading(true);
+    const newItem = await inventoryServiceAxios.createItem(values);
+    setItems(prev => [...prev, newItem]);
+    await fetchAllCategories();
+    return true;
+  } catch (error) {
+    console.error('Error creating item:', error);
+    message.error('Failed to create item. Please check the data and try again.');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const updateItemPrice = async (id: string, price: number) => {
-    try {
-      const updatedItem = await inventoryServiceAxios.updateItemPrice(id, { price });
-      setItems(prev => 
-        prev.map(item => item.id === id ? updatedItem : item)
-      );
-      return true;
-    } catch (error) {
-      message.error('Failed to update price.');
-      return false;
-    }
-  };
+const updateItemPrice = async (id: string, price: number) => {
+  try {
+    setLoading(true);
+    const updatedItem = await inventoryServiceAxios.updateItemPrice(id, { price });
+    setItems(prev => 
+      prev.map(item => item.id === id ? updatedItem : item)
+    );
+    return true;
+  } catch (error) {
+    console.error('Error updating price:', error);
+    message.error('Failed to update price. Please check the value and try again.');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
 
   return {
     items,
