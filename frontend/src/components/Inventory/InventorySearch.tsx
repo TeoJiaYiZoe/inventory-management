@@ -20,11 +20,7 @@ export const InventorySearch: React.FC<Props> = ({
       <Form.Item name="dateRange" label="Date Range">
         <DatePicker.RangePicker showTime />
       </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Search
-        </Button>
-      </Form.Item>
+      <Form.Item></Form.Item>
       <Form.Item name="category" label="Category">
         <Select
           placeholder="Select category"
@@ -33,6 +29,9 @@ export const InventorySearch: React.FC<Props> = ({
           options={categories.map((cat) => ({ value: cat, label: cat }))}
         />
       </Form.Item>
+      <Button type="primary" htmlType="submit" loading={loading}>
+        Search
+      </Button>
     </Form>
   );
 };
