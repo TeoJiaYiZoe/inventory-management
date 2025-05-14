@@ -33,3 +33,8 @@ export interface CreateFormValues {
 export interface EditFormValues {
   price: number;
 }
+
+export interface DeleteResponse {
+  status: 'success' | 'error';
+  deletedId: string;
+}

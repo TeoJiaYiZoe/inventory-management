@@ -256,3 +256,25 @@ class InventoryService:
         except Exception as e:
             logger.error(f"Error updating item {item_id}: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
+    async def delete_item(self, item_id: str) -> dict:
+        try:
+            response = self.table.get_item(
+                Key={'id': item_id}
+            )
+            
+            if 'Item' not in response:
+                logger.error(f"Item {item_id} not found")
+                raise HTTPException(status_code=404, detail="Item not found")
+            
+            self.table.delete_item(
+                Key={'id': item_id}
+            )
+            
+            logger.info(f"Deleted item {item_id}")
+            return {"status": "success", "deleted_id": item_id}
+        
+        except HTTPException:
+            raise 
+        except Exception as e:
+            logger.error(f"Error in delete_item: {str(e)}")
+            raise HTTPException(status_code=500, detail=str(e))

@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter
 from services.inventory import InventoryService
-from core.models import ItemCreate, PriceUpdate, QueryResponse
+from core.models import ItemCreate, PriceUpdate, QueryResponse, DeleteResponse
 
 router = APIRouter()
 service = InventoryService()
@@ -30,7 +30,7 @@ async def query_items_paginated(
     limit: int = 10,
     sort_field: str = "name",
     sort_order: str = "asc"
-):
+):      
     return await service.query_items_paginated(
         name=name, category=category, price_min=price_min, price_max=price_max, 
         page=page, limit=limit, sort_field=sort_field, sort_order=sort_order
@@ -39,3 +39,7 @@ async def query_items_paginated(
 @router.put("/items/{item_id}/price", response_model=dict)
 async def update_item_price(item_id: str, price_update: PriceUpdate):
     return await service.update_item_price(item_id, price_update)
+
+@router.delete("/items/{item_id}", response_model=DeleteResponse)
+async def delete_item(item_id: str):
+    return await service.delete_item(item_id)

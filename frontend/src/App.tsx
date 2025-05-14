@@ -24,9 +24,12 @@ const App = () => {
     fetchAllCategories,
     createItem,
     updateItemPrice,
+    deleteItem,
   } = useInventory();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // New state for delete modal
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null); // Track item to delete
   const [searchForm] = Form.useForm();
 
   useEffect(() => {
@@ -80,6 +83,28 @@ const App = () => {
     setEditingItem(item);
     setIsModalOpen(true);
   };
+  const handleDeleteClick = (item: Item) => {
+    setItemToDelete(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+
+    try {
+      const success = await deleteItem(itemToDelete.id);
+      if (success) {
+        message.success("Item deleted successfully");
+        setIsDeleteModalOpen(false);
+        await fetchItems(); // Refresh the list
+      }
+    } catch (error) {
+      message.error("Failed to delete item");
+      console.error("Deletion error:", error);
+    } finally {
+      setItemToDelete(null);
+    }
+  };
 
   return (
     <div style={{ padding: "24px" }}>
@@ -104,7 +129,12 @@ const App = () => {
         loading={loading}
       />
 
-      <InventoryTable items={items} loading={loading} onEdit={handleEdit} />
+      <InventoryTable
+        items={items}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDeleteClick}
+      />
 
       <Modal
         title={editingItem ? "Edit Item Price" : "Add New Item"}
@@ -128,6 +158,18 @@ const App = () => {
           </Button>
           <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
         </Space>
+      </Modal>
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalOpen}
+        onOk={handleConfirmDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        okText="Delete"
+        okButtonProps={{ danger: true }}
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete "{itemToDelete?.name}"?</p>
+        <p>This action cannot be undone.</p>
       </Modal>
     </div>
   );

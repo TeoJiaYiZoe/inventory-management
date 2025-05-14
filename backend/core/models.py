@@ -39,3 +39,7 @@ class QueryResponse(BaseModel):
     count: int
     page: int = Field(..., ge=1)
     limit: int = Field(..., ge=1, le=100)
+
+class DeleteResponse(BaseModel):
+    status: str
+    deleted_id: str

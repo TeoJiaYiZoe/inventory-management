@@ -1,15 +1,21 @@
 import React from "react";
 import { Table, Button } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Item } from "../../types";
 
 interface Props {
   items: Item[];
   loading: boolean;
   onEdit: (item: Item) => void;
+  onDelete: (item: Item) => void;
 }
 
-export const InventoryTable: React.FC<Props> = ({ items, loading, onEdit }) => {
+export const InventoryTable: React.FC<Props> = ({
+  items,
+  loading,
+  onEdit,
+  onDelete,
+}) => {
   const columns = [
     {
       title: "Name",
@@ -34,13 +40,23 @@ export const InventoryTable: React.FC<Props> = ({ items, loading, onEdit }) => {
       title: "Action",
       key: "action",
       render: (_: any, record: Item) => (
-        <Button
-          type="link"
-          icon={<EditOutlined />}
-          onClick={() => onEdit(record)}
-        >
-          Edit Price
-        </Button>
+        <div>
+          <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => onEdit(record)}
+          >
+            Edit Price
+          </Button>
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => onDelete(record)}
+          >
+            Delete
+          </Button>
+        </div>
       ),
     },
   ];

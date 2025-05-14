@@ -68,6 +68,21 @@ const updateItemPrice = async (id: string, price: number) => {
     setLoading(false);
   }
 };
+const deleteItem = async (id: string) => {
+  try {
+    setLoading(true);
+    await inventoryServiceAxios.deleteItem(id);
+    setItems(prev => prev.filter(item => item.id !== id));
+    message.success('Item deleted successfully');
+    return true;
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    message.error('Failed to delete item. Please try again.');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
 
   return {
     items,
@@ -77,6 +92,7 @@ const updateItemPrice = async (id: string, price: number) => {
     fetchItems,
     fetchAllCategories,
     createItem,
-    updateItemPrice
+    updateItemPrice,
+    deleteItem
   };
 };

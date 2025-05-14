@@ -60,3 +60,18 @@ async def test_update_item_price_500(mock_inventory_service, client, TEST_ITEM):
     mock_inventory_service.update_item_price.side_effect = raise_exception
     response = client.put(f"/items/{TEST_ITEM['id']}/price", json={"price": 39.99})
     assert response.status_code == 500
+    
+@pytest.mark.asyncio
+async def test_delete_item(mock_inventory_service, client, TEST_ITEM):
+    async def mock_delete(item_id):
+        return {"status": "success", "deleted_id": item_id}
+    
+    mock_inventory_service.delete_item = mock_delete
+    
+    response = client.delete(f"/items/{TEST_ITEM['id']}")
+    
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "success",
+        "deleted_id": TEST_ITEM['id']
+    }

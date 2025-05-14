@@ -4,7 +4,8 @@ import {
   QueryParams, 
   CreateFormValues, 
   EditFormValues,
-  Stats 
+  Stats,
+  DeleteResponse 
 } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
@@ -28,7 +29,7 @@ const transformItem = (item: any): Item => ({
 export const inventoryServiceAxios = {
   async getItems(params?: QueryParams): Promise<{ items: Item[]; stats: Stats }> {
     try {
-      const response = await api.get('/items', { params });
+      const response = await api.get('/items/', { params });
       
       const items: Item[] = response.data.items?.map(transformItem) || [];
       
@@ -48,7 +49,7 @@ export const inventoryServiceAxios = {
 
   async getCategories(): Promise<string[]> {
     try {
-      const response = await api.get('/items');
+      const response = await api.get('/items/');
       const items: Item[] = response.data.items?.map(transformItem) || [];
       return Array.from(new Set(items.map((item: Item) => item.category)));
     } catch (error) {
@@ -59,7 +60,7 @@ export const inventoryServiceAxios = {
 
   async createItem(values: CreateFormValues): Promise<Item> {
     try {
-      const response = await api.post('/items', values);
+      const response = await api.post('/items/', values);
       return transformItem(response.data);
     } catch (error) {
       console.error('Error creating item:', error);
@@ -69,11 +70,23 @@ export const inventoryServiceAxios = {
 
   async updateItemPrice(id: string, values: EditFormValues): Promise<Item> {
     try {
-      const response = await api.put(`/items/${id}/price`, values);
+      const response = await api.put(`/items/${id}/price/`, values);
       return transformItem(response.data);
     } catch (error) {
       console.error('Error updating item price:', error);
       throw error;
     }
   },
+  async deleteItem(id: string): Promise<DeleteResponse> {
+    try {
+      const response = await api.delete(`/items/${id}/`);
+      return {
+        status: 'success',
+        deletedId: response.data.deleted_id
+      };
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error;
+    }
+  }
 };
